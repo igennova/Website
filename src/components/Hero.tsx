@@ -1,24 +1,13 @@
-import Image from "next/image";
 import { portfolio } from "@/data/portfolio";
+import HeroBanner from "./HeroBanner";
 import VisitorLocation from "./VisitorLocation";
 
 export default function Hero() {
   return (
-    <section id="hero" className="px-6 pb-10 pt-24">
-      <div className="mx-auto w-full max-w-3xl">
-        <Image
-          src={portfolio.githubAvatar}
-          alt={portfolio.name}
-          width={64}
-          height={64}
-          className="avatar-glow animate-fade-up mb-4 rounded-full border border-border"
-        />
-        <p className="animate-fade-up-d1 mb-1 text-sm shimmer-text">
-          {portfolio.title}
-        </p>
-        <h1 className="animate-fade-up-d2 mb-3 text-4xl font-semibold tracking-tight text-text sm:text-5xl">
-          {portfolio.name}
-        </h1>
+    <section id="hero" className="pb-10">
+      <HeroBanner />
+
+      <div className="mx-auto w-full max-w-3xl px-6">
         <p className="animate-fade-up-d3 mb-5 max-w-lg text-base leading-relaxed text-text-muted">
           {portfolio.bio}
         </p>

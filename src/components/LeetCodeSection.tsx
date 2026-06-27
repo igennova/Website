@@ -40,12 +40,6 @@ export default async function LeetCodeSection() {
             <Stat label="Medium" value={stats.medium} />
             <Stat label="Hard" value={stats.hard} />
           </div>
-
-          {stats.contestsAttended !== null && stats.contestsAttended > 0 && (
-            <p className="mt-3 text-xs text-text-muted">
-              {stats.contestsAttended} contests attended
-            </p>
-          )}
         </div>
       </div>
     </section>

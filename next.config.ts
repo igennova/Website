@@ -11,6 +11,18 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "avatars.githubusercontent.com",
       },
+      {
+        protocol: "https",
+        hostname: "github.com",
+      },
+      {
+        protocol: "https",
+        hostname: "t2.gstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "t3.gstatic.com",
+      },
     ],
   },
 };

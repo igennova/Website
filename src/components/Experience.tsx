@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { portfolio } from "@/data/portfolio";
 import SectionHeader from "./SectionHeader";
 
@@ -9,12 +10,26 @@ export default function Experience() {
 
         <div className="space-y-4">
           {portfolio.experience.map((job) => (
-            <article key={`${job.company}-${job.period}`} className="glass-card p-6">
-              <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-                <h3 className="font-medium text-text">{job.role}</h3>
-                <span className="text-sm text-text-muted">{job.period}</span>
+            <article
+              key={`${job.company}-${job.period}`}
+              className="glass-card p-6"
+            >
+              <div className="mb-3 flex items-start gap-3">
+                <Image
+                  src={job.logo}
+                  alt={job.company}
+                  width={36}
+                  height={36}
+                  className="exp-logo shrink-0 rounded-lg border border-border bg-surface object-cover"
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <h3 className="font-medium text-text">{job.role}</h3>
+                    <span className="text-sm text-text-muted">{job.period}</span>
+                  </div>
+                  <p className="mt-0.5 text-sm text-accent">{job.company}</p>
+                </div>
               </div>
-              <p className="mb-3 text-sm text-accent">{job.company}</p>
               <p className="mb-4 text-sm leading-relaxed text-text-muted">
                 {job.description}
               </p>

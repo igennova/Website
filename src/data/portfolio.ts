@@ -25,6 +25,7 @@ export const portfolio = {
     {
       role: "Open Source Contributor",
       company: "Gumroad / Antiwork",
+      logo: "https://github.com/antiwork.png",
       period: "Oct 2025 — Feb 2026",
       description:
         "Merged PRs migrating Rails pages to Inertia.js, optimizing a 135M-row CSV export from 5+ minutes to 4.7s, and refactoring legacy SCSS to Tailwind CSS.",
@@ -33,6 +34,7 @@ export const portfolio = {
     {
       role: "AI Engineer",
       company: "PUCH AI",
+      logo: "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://puch.ai&size=128",
       period: "Jul 2025 — Aug 2025",
       description:
         "Built a multi-tool LLM agent pipeline with structured tool calling. Added Redis + Lua rate limiting for 10k+ users and unified image/video generation infrastructure.",
@@ -41,6 +43,7 @@ export const portfolio = {
     {
       role: "GSoC 2025 Contributor",
       company: "OWASP Foundation",
+      logo: "https://github.com/OWASP.png",
       period: "May 2025 — Aug 2025",
       description:
         "Built real-time video calling with WebRTC (sub-150ms latency), a WebSocket leaderboard for 100+ concurrent users, and deployed 5+ security simulation labs.",
@@ -49,6 +52,7 @@ export const portfolio = {
     {
       role: "Backend Developer",
       company: "Persist Venture",
+      logo: "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://persistventures.com&size=128",
       period: "Apr 2025 — Jun 2025",
       description:
         "Engineered FastAPI backend services and an AI media generation pipeline. Optimized PostgreSQL with indexing and primary-replica read scaling.",

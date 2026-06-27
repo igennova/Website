@@ -131,27 +131,51 @@ export async function fetchContributionsByOrg(
   username: string,
   excludeOrgs: string[] = [],
 ): Promise<OrgContributions[]> {
+  return fetchContributionsFromAccounts([username], excludeOrgs);
+}
+
+export async function fetchContributionsFromAccounts(
+  usernames: string[],
+  excludeOrgs: string[] = [],
+): Promise<OrgContributions[]> {
   const excluded = new Set(excludeOrgs.map((o) => o.toLowerCase()));
-  const pullRequests = await fetchPullRequests(username);
   const orgMap = new Map<string, OrgContributions>();
+  const seenUrls = new Set<string>();
 
-  for (const pr of pullRequests) {
-    if (excluded.has(pr.owner.toLowerCase())) continue;
+  for (const username of usernames) {
+    const pullRequests = await fetchPullRequests(username);
 
-    let org = orgMap.get(pr.owner);
-    if (!org) {
-      org = {
-        org: pr.owner,
-        orgUrl: `https://github.com/${pr.owner}`,
-        avatarUrl: `https://github.com/${pr.owner}.png`,
-        prCount: 0,
-        pullRequests: [],
-      };
-      orgMap.set(pr.owner, org);
+    for (const pr of pullRequests) {
+      if (excluded.has(pr.owner.toLowerCase())) continue;
+      if (seenUrls.has(pr.url)) continue;
+      seenUrls.add(pr.url);
+
+      let org = orgMap.get(pr.owner);
+      if (!org) {
+        org = {
+          org: pr.owner,
+          orgUrl: `https://github.com/${pr.owner}`,
+          avatarUrl: `https://github.com/${pr.owner}.png`,
+          prCount: 0,
+          pullRequests: [],
+        };
+        orgMap.set(pr.owner, org);
+      }
+      org.pullRequests.push(pr);
+      org.prCount += 1;
     }
-    org.pullRequests.push(pr);
-    org.prCount += 1;
   }
 
   return [...orgMap.values()].sort((a, b) => b.prCount - a.prCount);
+}
+
+export async function fetchGitHubProfile(username: string) {
+  return githubFetch<{
+    login: string;
+    name: string | null;
+    bio: string | null;
+    avatar_url: string;
+    html_url: string;
+    public_repos: number;
+  }>(`${GITHUB_API}/users/${username}`);
 }

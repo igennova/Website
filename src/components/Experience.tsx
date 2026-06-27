@@ -3,7 +3,7 @@ import SectionHeader from "./SectionHeader";
 
 export default function Experience() {
   return (
-    <section id="experience" className="px-6 py-20">
+    <section id="experience" className="section-wrap">
       <div className="mx-auto max-w-3xl">
         <SectionHeader title="Experience" subtitle="Where I've worked" />
 

@@ -1,5 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
+import LeetCodeSection from "@/components/LeetCodeSection";
 import GitHubSection from "@/components/GitHubSection";
 import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
@@ -11,6 +12,7 @@ export default function Home() {
       <Navigation />
       <main>
         <Hero />
+        <LeetCodeSection />
         <GitHubSection />
         <Experience />
         <Projects />

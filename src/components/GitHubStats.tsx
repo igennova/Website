@@ -22,7 +22,7 @@ export default async function GitHubStats({ username }: { username: string }) {
       {items.map((item) => (
         <div
           key={item.label}
-          className="rounded-lg border border-border bg-surface px-3 py-4 text-center"
+          className="stat-card rounded-lg border border-border bg-surface px-3 py-4 text-center"
         >
           <p className="text-2xl font-medium text-text">{item.value}</p>
           <p className="mt-1 text-xs text-text-muted">{item.label}</p>

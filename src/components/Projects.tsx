@@ -3,14 +3,20 @@ import SectionHeader from "./SectionHeader";
 
 export default function Projects() {
   return (
-    <section id="projects" className="px-6 py-20">
+    <section id="projects" className="section-wrap">
       <div className="mx-auto max-w-3xl">
         <SectionHeader title="Projects" subtitle="Things I've built" />
 
         <div className="grid gap-4 sm:grid-cols-2">
-          {portfolio.projects.map((project) => (
-            <article key={project.name} className="glass-card flex flex-col p-5">
-              <h3 className="mb-2 font-medium text-text">{project.name}</h3>
+          {portfolio.projects.map((project, i) => (
+            <article
+              key={project.name}
+              className="glass-card flex flex-col p-5"
+              style={{ animationDelay: `${i * 0.08}s` }}
+            >
+              <h3 className="mb-2 font-medium text-text transition-colors duration-200 group-hover:text-accent">
+                {project.name}
+              </h3>
               <p className="mb-4 flex-1 text-sm leading-relaxed text-text-muted">
                 {project.description}
               </p>
@@ -22,22 +28,24 @@ export default function Projects() {
                 ))}
               </div>
               <div className="flex gap-4 text-sm">
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-text-muted hover:text-accent"
-                >
-                  Code
-                </a>
+                {project.github && (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-hover text-text-muted"
+                  >
+                    Code →
+                  </a>
+                )}
                 {project.live && (
                   <a
                     href={project.live}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-text-muted hover:text-accent"
+                    className="link-hover text-text-muted"
                   >
-                    Live
+                    Live →
                   </a>
                 )}
               </div>

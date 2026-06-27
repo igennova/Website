@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer
       id="contact"
-      className="border-t border-border px-6 py-16"
+      className="border-t border-border px-6 py-10"
     >
       <div className="mx-auto max-w-3xl text-center">
         <h2 className="mb-2 text-lg font-medium text-text">Get in touch</h2>
@@ -14,7 +14,7 @@ export default function Footer() {
 
         <a
           href={`mailto:${portfolio.email}`}
-          className="mb-8 inline-block text-accent hover:underline"
+          className="link-hover mb-8 inline-block text-accent"
         >
           {portfolio.email}
         </a>
@@ -24,23 +24,39 @@ export default function Footer() {
             href={portfolio.social.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-text-muted hover:text-text"
+            className="link-hover text-text-muted"
           >
             GitHub
+          </a>
+          <a
+            href={portfolio.bountyGithub.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-hover text-text-muted"
+          >
+            Bounties
           </a>
           <a
             href={portfolio.social.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-text-muted hover:text-text"
+            className="link-hover text-text-muted"
           >
             LinkedIn
+          </a>
+          <a
+            href={portfolio.social.leetcode}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-hover text-text-muted"
+          >
+            LeetCode
           </a>
           <a
             href={portfolio.social.twitter}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-text-muted hover:text-text"
+            className="link-hover text-text-muted"
           >
             Twitter
           </a>

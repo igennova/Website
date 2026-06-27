@@ -11,7 +11,7 @@ export default function OrgContributionsList({
   const [openOrg, setOpenOrg] = useState<string | null>(orgs[0]?.org ?? null);
 
   return (
-    <div className="mt-8">
+    <div className="mt-6">
       <h3 className="mb-3 text-sm font-medium text-text">
         Open source contributions
       </h3>
@@ -22,12 +22,12 @@ export default function OrgContributionsList({
           return (
             <div
               key={org.org}
-              className="overflow-hidden rounded-lg border border-border bg-surface"
+              className="org-row overflow-hidden rounded-lg border border-border bg-surface"
             >
               <button
                 type="button"
                 onClick={() => setOpenOrg(isOpen ? null : org.org)}
-                className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-white/[0.02]"
+                className="flex w-full items-center gap-3 px-4 py-3 text-left"
                 aria-expanded={isOpen}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -48,14 +48,14 @@ export default function OrgContributionsList({
               </button>
 
               {isOpen && (
-                <div className="border-t border-border px-2 pb-2 pt-1">
+                <div className="border-t border-border px-2 pb-2 pt-1 animate-fade-up">
                   {org.pullRequests.map((pr) => (
                     <a
                       key={pr.url}
                       href={pr.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block rounded-md px-3 py-2.5 transition-colors hover:bg-white/[0.03]"
+                      className="pr-row block rounded-md px-3 py-2.5"
                     >
                       <div className="mb-1 flex flex-wrap items-center gap-2">
                         <MergedBadge />
@@ -81,7 +81,7 @@ export default function OrgContributionsList({
 
 function MergedBadge() {
   return (
-    <span className="inline-flex items-center gap-1 rounded bg-purple-500/15 px-1.5 py-0.5 text-xs font-medium text-purple-400">
+    <span className="inline-flex items-center gap-1 rounded bg-purple-500/15 px-1.5 py-0.5 text-xs font-medium text-purple-300">
       <svg
         viewBox="0 0 12 12"
         fill="none"
@@ -105,7 +105,7 @@ function Chevron({ open }: { open: boolean }) {
     <svg
       viewBox="0 0 20 20"
       fill="currentColor"
-      className={`h-4 w-4 shrink-0 text-text-muted transition-transform duration-200 ${
+      className={`h-4 w-4 shrink-0 text-text-muted transition-transform duration-300 ease-out ${
         open ? "rotate-180" : ""
       }`}
     >

@@ -9,8 +9,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "Personal developer portfolio",
+  title: "Lalit Negi | Portfolio",
+  description:
+    "Full Stack & AI Engineer — GSoC '25 @ OWASP, open-source contributor, $20k+ in bounties.",
 };
 
 export default function RootLayout({

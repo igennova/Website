@@ -34,12 +34,15 @@ export default function Navigation() {
 
   return (
     <header
-      className={`fixed top-0 z-50 w-full transition-all duration-200 ${
+      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
         scrolled ? "glass-nav" : ""
       }`}
     >
       <nav className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
-        <a href="#hero" className="text-sm font-medium text-text">
+        <a
+          href="#hero"
+          className="text-sm font-medium text-text transition-opacity hover:opacity-70"
+        >
           {portfolio.name.split(" ")[0]}
         </a>
 

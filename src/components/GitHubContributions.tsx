@@ -1,20 +1,17 @@
 import { portfolio } from "@/data/portfolio";
-import { fetchContributionsByOrg } from "@/lib/github";
+import { fetchContributionsFromAccounts } from "@/lib/github";
 import OrgContributionsList from "./OrgContributionsList";
 
-export default async function GitHubContributions({
-  username,
-}: {
-  username: string;
-}) {
-  const orgs = await fetchContributionsByOrg(username, [
-    ...portfolio.excludeOrgs,
-  ]);
+export default async function GitHubContributions() {
+  const orgs = await fetchContributionsFromAccounts(
+    [...portfolio.githubAccounts],
+    [...portfolio.excludeOrgs],
+  );
 
   if (orgs.length === 0) {
     return (
       <p className="mt-6 text-sm text-text-muted">
-        No merged pull requests found. Make sure your GitHub username is correct.
+        No merged pull requests found yet.
       </p>
     );
   }

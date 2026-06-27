@@ -17,7 +17,7 @@ export const portfolio = {
   },
   social: {
     github: "https://github.com/igennova",
-    linkedin: "https://linkedin.com/in/lalitnegi",
+    linkedin: "https://www.linkedin.com/in/lalitnegi001/",
     twitter: "https://twitter.com/_luckynot",
     leetcode: "https://leetcode.com/igennova",
   },

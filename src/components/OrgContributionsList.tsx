@@ -8,7 +8,7 @@ export default function OrgContributionsList({
 }: {
   orgs: OrgContributions[];
 }) {
-  const [openOrg, setOpenOrg] = useState<string | null>(orgs[0]?.org ?? null);
+  const [openOrg, setOpenOrg] = useState<string | null>(null);
 
   return (
     <div className="mt-6">

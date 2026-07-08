@@ -8,7 +8,7 @@ export const portfolio = {
   githubAvatar:
     "https://avatars.githubusercontent.com/u/91773416?v=4",
   githubAccounts: ["igennova", "devwill2"],
-  excludeOrgs: ["igennova", "devwill2", "devsuryansh","fineanmol"],
+  excludeOrgs: ["igennova", "devwill2", "devsuryansh", "fineanmol", "rahulnegi20"],
   bountyGithub: {
     username: "devwill2",
     url: "https://github.com/Devwill2",

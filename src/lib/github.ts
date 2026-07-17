@@ -14,7 +14,10 @@ async function githubFetch<T>(url: string): Promise<T | null> {
       headers: headers(),
       next: { revalidate: 3600 },
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.warn(`GitHub API ${res.status}: ${url}`);
+      return null;
+    }
     return res.json();
   } catch {
     return null;
@@ -35,6 +38,8 @@ export interface PullRequest {
   repoName: string;
   repoUrl: string;
   date: string;
+  /** Gumboard has PRs disabled — those show as commits instead. */
+  kind?: "merged" | "commit";
 }
 
 export interface OrgContributions {
@@ -43,6 +48,27 @@ export interface OrgContributions {
   avatarUrl: string;
   prCount: number;
   pullRequests: PullRequest[];
+}
+
+/** Map related owners into one display org (e.g. gumroad → antiwork). */
+const ORG_ALIASES: Record<string, string> = {
+  gumroad: "antiwork",
+  gumboard: "antiwork",
+};
+
+const DISPLAY_NAMES: Record<string, string> = {
+  antiwork: "Antiwork / Gumroad / Gumboard",
+};
+
+/** Repos where PRs are disabled / not searchable — pull commits instead. */
+const COMMIT_REPOS = [{ owner: "antiwork", repo: "gumboard" }] as const;
+
+function resolveOrg(owner: string): string {
+  return ORG_ALIASES[owner.toLowerCase()] ?? owner;
+}
+
+function displayName(org: string): string {
+  return DISPLAY_NAMES[org.toLowerCase()] ?? org;
 }
 
 export async function fetchGitHubStats(
@@ -91,10 +117,6 @@ function parseRepo(url: string) {
   };
 }
 
-function prState(item: SearchIssue): boolean {
-  return Boolean(item.pull_request?.merged_at);
-}
-
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("en-US", {
     month: "short",
@@ -103,17 +125,9 @@ function formatDate(iso: string): string {
   });
 }
 
-export async function fetchPullRequests(
-  username: string,
-  limit = 50,
-): Promise<PullRequest[]> {
-  const data = await githubFetch<{ items: SearchIssue[] }>(
-    `${GITHUB_API}/search/issues?q=author:${username}+type:pr+is:merged&sort=updated&order=desc&per_page=${limit}`,
-  );
-  if (!data?.items) return [];
-
-  return data.items
-    .filter((item) => prState(item))
+function mapIssues(items: SearchIssue[]): PullRequest[] {
+  return items
+    .filter((item) => Boolean(item.pull_request?.merged_at))
     .map((item) => {
       const { owner, repoName, repoUrl } = parseRepo(item.repository_url);
       return {
@@ -123,8 +137,92 @@ export async function fetchPullRequests(
         repoName,
         repoUrl,
         date: formatDate(item.created_at),
+        kind: "merged" as const,
       };
     });
+}
+
+interface RepoCommit {
+  html_url: string;
+  commit: {
+    message: string;
+    author: { date: string } | null;
+    committer: { date: string } | null;
+  };
+}
+
+/**
+ * Gumboard (and similar) disabled the PR API — contributions only show as commits.
+ * Commit messages often include (#123) from the original merged PR.
+ */
+async function fetchRepoCommits(
+  username: string,
+  owner: string,
+  repo: string,
+): Promise<PullRequest[]> {
+  const data = await githubFetch<RepoCommit[]>(
+    `${GITHUB_API}/repos/${owner}/${repo}/commits?author=${username}&per_page=30`,
+  );
+  if (!data?.length) return [];
+
+  return data.map((c) => {
+    const title = c.commit.message.split("\n")[0]?.trim() || "Contribution";
+    const dateIso =
+      c.commit.author?.date ?? c.commit.committer?.date ?? new Date().toISOString();
+    return {
+      title,
+      url: c.html_url,
+      owner,
+      repoName: repo,
+      repoUrl: `https://github.com/${owner}/${repo}`,
+      date: formatDate(dateIso),
+      kind: "commit" as const,
+    };
+  });
+}
+
+/** General merged PRs for an account (recent). */
+async function fetchRecentMergedPRs(
+  username: string,
+  limit = 100,
+): Promise<PullRequest[]> {
+  const data = await githubFetch<{ items: SearchIssue[] }>(
+    `${GITHUB_API}/search/issues?q=author:${username}+type:pr+is:merged&sort=updated&order=desc&per_page=${limit}`,
+  );
+  return mapIssues(data?.items ?? []);
+}
+
+/**
+ * Extra targeted search so important orgs aren't lost when an account
+ * has many newer PRs elsewhere (search is capped / sorted by updated).
+ */
+async function fetchOrgMergedPRs(
+  username: string,
+  org: string,
+  limit = 50,
+): Promise<PullRequest[]> {
+  const data = await githubFetch<{ items: SearchIssue[] }>(
+    `${GITHUB_API}/search/issues?q=author:${username}+type:pr+is:merged+org:${org}&sort=updated&order=desc&per_page=${limit}`,
+  );
+  return mapIssues(data?.items ?? []);
+}
+
+async function fetchPullRequestsForUser(
+  username: string,
+): Promise<PullRequest[]> {
+  const [recent, antiwork, ...commitBatches] = await Promise.all([
+    fetchRecentMergedPRs(username),
+    fetchOrgMergedPRs(username, "antiwork"),
+    ...COMMIT_REPOS.map(({ owner, repo }) =>
+      fetchRepoCommits(username, owner, repo),
+    ),
+  ]);
+
+  const byUrl = new Map<string, PullRequest>();
+  for (const pr of [...recent, ...antiwork, ...commitBatches.flat()]) {
+    byUrl.set(pr.url, pr);
+  }
+  return [...byUrl.values()];
 }
 
 export async function fetchContributionsByOrg(
@@ -142,28 +240,39 @@ export async function fetchContributionsFromAccounts(
   const orgMap = new Map<string, OrgContributions>();
   const seenUrls = new Set<string>();
 
-  for (const username of usernames) {
-    const pullRequests = await fetchPullRequests(username);
+  const allPrs = (
+    await Promise.all(usernames.map((u) => fetchPullRequestsForUser(u)))
+  ).flat();
 
-    for (const pr of pullRequests) {
-      if (excluded.has(pr.owner.toLowerCase())) continue;
-      if (seenUrls.has(pr.url)) continue;
-      seenUrls.add(pr.url);
+  for (const pr of allPrs) {
+    const orgKey = resolveOrg(pr.owner);
+    if (excluded.has(orgKey.toLowerCase())) continue;
+    if (excluded.has(pr.owner.toLowerCase())) continue;
+    if (seenUrls.has(pr.url)) continue;
+    seenUrls.add(pr.url);
 
-      let org = orgMap.get(pr.owner);
-      if (!org) {
-        org = {
-          org: pr.owner,
-          orgUrl: `https://github.com/${pr.owner}`,
-          avatarUrl: `https://github.com/${pr.owner}.png`,
-          prCount: 0,
-          pullRequests: [],
-        };
-        orgMap.set(pr.owner, org);
-      }
-      org.pullRequests.push(pr);
-      org.prCount += 1;
+    let org = orgMap.get(orgKey);
+    if (!org) {
+      org = {
+        org: displayName(orgKey),
+        orgUrl: `https://github.com/${orgKey}`,
+        avatarUrl: `https://github.com/${orgKey}.png`,
+        prCount: 0,
+        pullRequests: [],
+      };
+      orgMap.set(orgKey, org);
     }
+    org.pullRequests.push(pr);
+    org.prCount += 1;
+  }
+
+  // Newest first within each org
+  for (const org of orgMap.values()) {
+    org.pullRequests.sort((a, b) => {
+      const da = new Date(a.date).getTime();
+      const db = new Date(b.date).getTime();
+      return db - da;
+    });
   }
 
   return [...orgMap.values()].sort((a, b) => b.prCount - a.prCount);

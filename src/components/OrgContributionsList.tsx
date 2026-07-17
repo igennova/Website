@@ -42,7 +42,7 @@ export default function OrgContributionsList({
                   {org.org}
                 </span>
                 <span className="text-xs text-text-muted">
-                  {org.prCount} merged
+                  {org.prCount} contribution{org.prCount !== 1 ? "s" : ""}
                 </span>
                 <Chevron open={isOpen} />
               </button>
@@ -58,7 +58,7 @@ export default function OrgContributionsList({
                       className="pr-row block rounded-md px-3 py-2.5"
                     >
                       <div className="mb-1 flex flex-wrap items-center gap-2">
-                        <MergedBadge />
+                        {pr.kind === "commit" ? <CommitBadge /> : <MergedBadge />}
                         <span className="text-xs text-text-muted">
                           {pr.date}
                         </span>
@@ -96,6 +96,14 @@ function MergedBadge() {
         />
       </svg>
       Merged
+    </span>
+  );
+}
+
+function CommitBadge() {
+  return (
+    <span className="inline-flex items-center gap-1 rounded bg-sky-500/15 px-1.5 py-0.5 text-xs font-medium text-sky-300">
+      Commit
     </span>
   );
 }

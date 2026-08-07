@@ -1,6 +1,6 @@
 export const portfolio = {
   name: "Lalit Negi",
-  title: "Full Stack & AI Engineer",
+  title: "hello",
   bio: "GSoC '25 contributor at OWASP. I build real-time systems, LLM agent pipelines, and scalable backends — with $20k+ earned in open-source bounties.",
   email: "luckynegi1025@gmail.com",
   leetcodeUsername: "igennova",

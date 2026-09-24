@@ -19,6 +19,14 @@ export default function Navigation() {
     const onScroll = () => {
       setScrolled(window.scrollY > 20);
 
+      // Short last sections never reach the header, so pin the last link at page bottom.
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atBottom) {
+        setActive(links[links.length - 1].href);
+        return;
+      }
+
       for (const link of [...links].reverse()) {
         const el = document.getElementById(link.href.slice(1));
         if (el && el.getBoundingClientRect().top <= 100) {

@@ -21,6 +21,10 @@ export type ProjectData = {
   image?: string;
   /** Rendered as a step-by-step pipeline graphic when there is no screenshot. */
   pipeline?: string[];
+  /** Rendered as an animated scatter-gather diagram when there is no screenshot. */
+  shards?: { count: number; caption: string };
+  /** Small badge next to the tagline, e.g. "In progress". */
+  status?: string;
 };
 
 export const portfolio = {
@@ -124,6 +128,22 @@ export const portfolio = {
     },
   ] as ExperienceData[],
   projects: [
+    {
+      name: "Distributed Vector Search",
+      tagline: "ANN search engine, built from scratch",
+      status: "In progress",
+      description:
+        "A distributed approximate-nearest-neighbor engine exploring the internals of systems like Qdrant and Milvus — HNSW indexing, sharding across gRPC services, and a scatter-gather coordinator, all benchmarked for recall vs latency.",
+      features: [
+        "HNSW from scratch: 0.93 recall@10, 2.5× faster than exact",
+        "gRPC shards + scatter-gather top-K merge",
+        "3.5× lower fan-out latency (5.6 → 1.6 ms) after diagnosing GIL contention",
+      ],
+      tech: ["Python", "gRPC", "Protocol Buffers", "NumPy", "pytest"],
+      github: "https://github.com/igennova/Distributed-Vector-Search-Engine",
+      live: "",
+      shards: { count: 4, caption: "parallel fan-out · p50 1.6 ms" },
+    },
     {
       name: "LeetFight",
       tagline: "Competitive coding, as a sport",

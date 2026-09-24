@@ -39,7 +39,7 @@ export interface PullRequest {
   repoUrl: string;
   date: string;
   /** Gumboard has PRs disabled — those show as commits instead. */
-  kind?: "merged" | "commit";
+  kind?: "merged" | "commit" | "archived";
 }
 
 export interface OrgContributions {
@@ -48,6 +48,8 @@ export interface OrgContributions {
   avatarUrl: string;
   prCount: number;
   pullRequests: PullRequest[];
+  /** Set for orgs whose repos were deleted — counts come from portfolio data. */
+  archived?: { countLabel: string; note: string };
 }
 
 /** Map related owners into one display org (e.g. gumroad → antiwork). */

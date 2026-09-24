@@ -33,6 +33,26 @@ export const portfolio = {
   githubAvatar:
     "https://avatars.githubusercontent.com/u/91773416?v=4",
   githubAccounts: ["igennova", "devwill2"],
+  /**
+   * Contributions GitHub can no longer serve (repo deleted), merged into the
+   * open source section by hand.
+   */
+  archivedContributions: [
+    {
+      org: "OWASP BLT",
+      login: "OWASP-BLT",
+      repo: "BLT",
+      prCount: 50,
+      countLabel: "50+",
+      period: "Aug 2025",
+      note: "The OWASP-BLT repository was removed from GitHub, so individual PR links are no longer available.",
+      highlights: [
+        "Real-time video calling with WebRTC at sub-150ms latency",
+        "WebSocket leaderboard for 100+ concurrent users",
+        "Deployed 5+ security simulation labs",
+      ],
+    },
+  ],
   excludeOrgs: ["igennova", "devwill2", "devsuryansh", "fineanmol", "rahulnegi20"],
   bountyGithub: {
     username: "devwill2",

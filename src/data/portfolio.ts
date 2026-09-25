@@ -163,7 +163,7 @@ export const portfolio = {
       features: ["Script generation", "AI voiceover", "Remotion rendering"],
       tech: ["Next.js", "Remotion", "TypeScript"],
       github: "",
-      live: "https://quotesnap-alpha.vercel.app/",
+      live: "https://quotesnap-vfaw.vercel.app/",
       image: "/projects/wemakevideos.png",
     },
     {

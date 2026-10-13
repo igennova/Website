@@ -153,7 +153,7 @@ export const portfolio = {
       tech: ["Next.js", "TypeScript", "WebSockets", "Real-time"],
       github: "",
       live: "https://cp-nextjs-iota.vercel.app/",
-      image: "/projects/leetfight.png",
+      image: "/projects/leetfight-arena.png",
     },
     {
       name: "WeMakeVideos",
